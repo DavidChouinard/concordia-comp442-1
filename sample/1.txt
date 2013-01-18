@@ -1,0 +1,7 @@
+// I'm a comment
+/* Multi-line comment 1 */
+hello = .23 / 2; // I'm a second comment
+if (hello == 1.23 or hello >= 2 or hello < 0 and hello<>1) {
+  print(test); // I'm a third comment
+}
+/* Multi-line comment 2 * */
