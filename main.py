@@ -13,20 +13,24 @@ import io
 def main():
     stream = io.open('./sample/1.txt')
 
+    errors = []
+
     token = nextToken(stream)
     while token:
-        print(Fore.GREEN + "( " + Fore.RESET + str(token) + Fore.GREEN + " )" + Fore.RESET, end=' ')
+        if isinstance(token, CompileError):
+            errors.append(token)
+        #else:
+            #print(Fore.GREEN + "( " + Fore.RESET + str(token) + Fore.GREEN + " )" + Fore.RESET, end=' ')
         token = nextToken(stream)
 
+    if errors:
+        print(Back.RED + "Found " + str(len(errors)) + " error" + ("s" if len(errors) > 1 else "") + ":" + Style.RESET_ALL + "\n")
+        for error in errors:
+            print("    " + error.message + "\n    " + Fore.CYAN + "Line " + str(error.line_number) + ":" + Style.RESET_ALL + "  " + error.context + "\n")
+    else:
+        print(Back.GREEN + "Success" + Style.RESET_ALL + " Tokenization completed without errors")
+
     stream.close()
-
-    print()
-
-    #print Fore.RED + 'some red text'
-    #print Back.GREEN + 'and with a green background'
-    #print Style.DIM + 'and in dim text'
-    #print Fore.RESET + Back.RESET + Style.RESET_ALL
-    #print 'back to normal now'
 
 if __name__ == "__main__":
     main()

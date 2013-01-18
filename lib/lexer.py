@@ -144,3 +144,22 @@ class Token:
 
     def __str__(self):
         return self.token + "=" + self.lexeme
+
+class CompileError:
+    # Tokens are internally stored as strings
+
+    def __init__(self, message, stream):
+        self.message = message
+        self.stream = stream
+        self.stream_position = stream.tell()
+
+        # Start from the beginning and get the line number and context
+        stream.seek(0)
+        self.context = stream.readline()
+        self.line_number = 1
+        while stream.tell() < self.stream_position:
+            self.context = stream.readline().strip()
+            self.line_number += 1
+
+        # Return stream position to original
+        self.stream.seek(self.stream_position)
