@@ -1,6 +1,5 @@
 
 from __future__ import print_function
-from colorama import init, Fore, Back, Style
 
 def nextToken(stream):
     while True:
@@ -132,8 +131,8 @@ def nextToken(stream):
                     # TODO: Throw error about "123." form
                     stream.seek(stream.tell() - 1)
         else:
-            # TODO
-            print(character, end='')
+            # We shouldn't ever reach here, but just in case
+            return CompileError("Unsuported character", stream)
 
 class Token:
     # Tokens are internally stored as strings
@@ -143,7 +142,7 @@ class Token:
         self.lexeme = lexeme
 
     def __str__(self):
-        return self.token + "=" + self.lexeme
+        return self.token + "=\"" + self.lexeme + "\""
 
 class CompileError:
     # Tokens are internally stored as strings
