@@ -1,0 +1,11 @@
+== + ( if 
+<> - ) then
+< * { else
+> / } while
+<= = [ do
+>= and ] class
+; not integer
+, or real
+. read
+write
+return

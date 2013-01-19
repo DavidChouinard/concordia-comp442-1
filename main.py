@@ -28,9 +28,13 @@ def main():
     while token:
         if isinstance(token, CompileError):
             errors.append(token)
-        else:
-            output.write(u'(' + str(token) + u') ')
-            #print(Fore.GREEN + "( " + Fore.RESET + str(token) + Fore.GREEN + " )" + Fore.RESET)
+        elif args.debug:
+            #output.write(u'(' + str(token) + u') ')
+            output.write(u'Token(\'' + token.token + u'\', \'' + token.lexeme + u'\'),')
+            for _ in range(abs(4 - ((5 + len(token.token + token.lexeme)) % 15))):
+                output.write(u'	')
+
+        print(Fore.GREEN + "( " + Fore.RESET + str(token) + Fore.GREEN + " )" + Fore.RESET)
         token = nextToken(stream)
 
     if errors:
@@ -40,9 +44,11 @@ def main():
     else:
         print(Back.GREEN + "Success" + Style.RESET_ALL + " Tokenization completed without errors")
 
-    output.close()
-    error_log.close()
     stream.close()
+
+    if args.debug:
+        output.close()
+        error_log.close()
 
 if __name__ == "__main__":
     main()

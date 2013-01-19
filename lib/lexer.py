@@ -83,7 +83,7 @@ def nextToken(stream):
             while character.isalnum() or character == "_":
                 # Reserved keywords
                 lexeme += character
-                if all(token is lexeme.upper() for token in ["IF", "THEN", "ELSE", "WHILE", "DO", "CLASS", "NOT", "INTEGER", "REAL" "READ", "WRITE", "RETURN"]):
+                if lexeme.upper() in ["IF", "THEN", "ELSE", "WHILE", "DO", "CLASS", "NOT", "INTEGER", "REAL", "READ", "WRITE", "RETURN"]:
                     return Token(lexeme.upper(), lexeme)
                 elif lexeme.upper() == "OR" or lexeme.upper() == "AND":
                     return Token("BOOLOP", lexeme)
@@ -144,6 +144,9 @@ class Token:
     def __str__(self):
         return self.token + "=\"" + self.lexeme + "\""
 
+    def __eq__(self, other):
+        return (self.token == other.token and self.lexeme == other.lexeme)
+
 class CompileError:
     # Tokens are internally stored as strings
 
@@ -162,3 +165,6 @@ class CompileError:
 
         # Return stream position to original
         self.stream.seek(self.stream_position)
+
+    def __eq__(self, other):
+        return (self.message == other.message and self.line_number == other.line_number)
