@@ -1,0 +1,3 @@
+if not    // This is an example where whitespace is important. If
+          // whitespace was disregarded, this would be tokenized as the
+          // id "ifnot" rather the keywords "if" and "not"

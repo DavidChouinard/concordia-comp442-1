@@ -130,9 +130,10 @@ def nextToken(stream):
                 else:
                     # TODO: Throw error about "123." form
                     stream.seek(stream.tell() - 1)
+                    return CompileError('Unrecognized number format for "' + lexeme + '"', stream)
         else:
-            # We shouldn't ever reach here, but just in case
-            return CompileError("Unsuported character", stream)
+            # This is for unrecognized punctuation, weird control characters, etc.
+            return CompileError('Unrecognized character "' + character + '"', stream)
 
 class Token:
     # Tokens are internally stored as strings
@@ -152,19 +153,24 @@ class CompileError:
 
     def __init__(self, message, stream):
         self.message = message
-        self.stream = stream
-        self.stream_position = stream.tell()
 
-        # Start from the beginning and get the line number and context
-        stream.seek(0)
-        self.context = stream.readline()
-        self.line_number = 1
-        while stream.tell() < self.stream_position:
-            self.context = stream.readline().strip()
-            self.line_number += 1
+        if isinstance(stream, int):
+            # This is for unit testing, it means stream is a line number
+            self.line_number = stream
+        else:
+            self.stream = stream
+            self.stream_position = stream.tell()
 
-        # Return stream position to original
-        self.stream.seek(self.stream_position)
+            # Start from the beginning and get the line number and context
+            stream.seek(0)
+            self.context = stream.readline()
+            self.line_number = 1
+            while stream.tell() < self.stream_position:
+                self.context = stream.readline().strip()
+                self.line_number += 1
+
+            # Return stream position to original
+            self.stream.seek(self.stream_position)
 
     def __eq__(self, other):
         return (self.message == other.message and self.line_number == other.line_number)

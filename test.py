@@ -2,6 +2,8 @@ import unittest
 from lib.lexer import *
 import io
 
+from pprint import pprint
+
 class TestSequenceFunctions(unittest.TestCase):
 
     def test_comments(self): 
@@ -40,6 +42,17 @@ class TestSequenceFunctions(unittest.TestCase):
                 Token('COMMA', ','),			Token('BOOLOP', 'or'),		Token('REAL', 'real'),
                 Token('PERIOD', '.'),			Token('READ', 'read'),		Token('WRITE', 'write'),
                 Token('RETURN', 'return')])
+
+    def test_unrecognized_characters(self):
+        self.stream = io.open("./sample/unrecognized_characters.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('SEMICOLON', ';'),		Token('RELOP', '>='),		CompileError('Unrecognized character "|"', 1),
+                Token('IDENTIFIER', 'foo'),		CompileError('Unrecognized character "~"', 1), Token('IDENTIFIER', 'bar')])
+
+    def test_whitespace(self):
+        self.stream = io.open("./sample/whitespace.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IF', 'if'),		Token('NOT', 'not')])
 
     def getTokensFromStream(self, stream):
         tokens = []
