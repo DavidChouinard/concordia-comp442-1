@@ -40,7 +40,7 @@ def main():
     if errors:
         print(Back.RED + "Found " + str(len(errors)) + " error" + ("s" if len(errors) > 1 else "") + ":" + Style.RESET_ALL + "\n")
         for error in errors:
-            print("    " + error.message + "\n    " + Fore.CYAN + "Line " + str(error.line_number) + ":" + Style.RESET_ALL + "  " + error.context + "\n")
+            print("    " + error.message + "\n    " + Fore.CYAN + "Line " + str(error.line_number) + ":" + Style.RESET_ALL + "  " + error.context )
     else:
         print(Back.GREEN + "Success" + Style.RESET_ALL + " Tokenization completed without errors")
 

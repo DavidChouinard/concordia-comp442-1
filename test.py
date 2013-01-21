@@ -1,10 +1,19 @@
-import unittest
 from lib.lexer import *
+import unittest
 import io
 
-from pprint import pprint
-
 class TestSequenceFunctions(unittest.TestCase):
+
+    def test_ta_sample(self): 
+        self.stream = io.open("./sample/ta_sample.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('CLASS', 'class'),		Token('IDENTIFIER', 'myClass'),Token('OPENCURLY', '{'),
+                Token('INTEGER', 'integer'),	Token('IDENTIFIER', 'i'),	Token('ASSIGNMENT', '='),
+                Token('INTNUM', '2'),			Token('SEMICOLON', ';'),	Token('REAL', 'real'),
+                Token('ASSIGNMENT', '='),		Token('FLOATNUM', '6.99'),	Token('SEMICOLON', ';'),
+                Token('IF', 'if'),				Token('OPENPAR', '('),		Token('IDENTIFIER', 'i'),
+                Token('RELOP', '<='),			Token('INTNUM', '4'),		Token('CLOSEPAR', ')'),
+                Token('OPENCURLY', '{'),		Token('CLOSECURLY', '}'),	Token('CLOSECURLY', '}')])
 
     def test_comments(self): 
         self.stream = io.open("./sample/comments.txt")
@@ -21,11 +30,38 @@ class TestSequenceFunctions(unittest.TestCase):
                 Token('IDENTIFIER', 'test'),	Token('CLOSEPAR', ')'),		Token('SEMICOLON', ';'),
                 Token('CLOSECURLY', '}')])
 
+    def test_comments_unbalanced(self): 
+        self.stream = io.open("./sample/comments_unbalanced.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
+                Token('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
+
+    def test_nested_comments(self): 
+        self.stream = io.open("./sample/nested_comments.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
+                Token('SEMICOLON', ';')])
+
+    def test_comments_unbalanced2(self): 
+        self.stream = io.open("./sample/comments_unbalanced2.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
+                Token('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
+
     def test_numbers(self):
         self.stream = io.open("./sample/numbers.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
                 [Token('FLOATNUM', '0.23'),		Token('FLOATNUM', '.23'),	Token('FLOATNUM', '1.23'),
-                Token('INTNUM', '123')])
+                Token('INTNUM', '123'),			CompileError('Unrecognized number format for "123."', 1),
+                Token('FLOATNUM', '0.0'),		Token('INTNUM', '123'),		Token('IDENTIFIER', 'a'),
+                Token('FLOATNUM', '0.100000'),	Token('INTNUM', '00001')])
+
+    def test_numbers_with_characters(self):
+        self.stream = io.open("./sample/numbers_with_characters.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IDENTIFIER', 'i'),		Token('ASSIGNMENT', '='),	Token('INTNUM', '12'),
+                Token('IF', 'if'),				Token('IDENTIFIER', 'i'),	Token('ASSIGNMENT', '='),
+                Token('INTNUM', '12'),			Token('IF', 'if')])
 
     def test_punctuation(self):
         self.stream = io.open("./sample/punctuation.txt")
@@ -52,7 +88,15 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_whitespace(self):
         self.stream = io.open("./sample/whitespace.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IF', 'if'),		Token('NOT', 'not')])
+                [Token('IDENTIFIER', 'foo'),	Token('NOT', 'not')])
+
+    def test_identifiers(self):
+        self.stream = io.open("./sample/identifiers.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+            [Token('IDENTIFIER', 'a'),			Token('IDENTIFIER', 'abc'),	Token('IDENTIFIER', 'abc123'),
+            Token('IDENTIFIER', 'a1'),			Token('IDENTIFIER', 'a_'),	Token('IDENTIFIER', 'a123_'),
+            CompileError('Unrecognized character "_"', 4), 	                Token('IDENTIFIER', 'ab'),
+            Token('INTNUM', '123'),				Token('IDENTIFIER', 'ab')])
 
     def getTokensFromStream(self, stream):
         tokens = []

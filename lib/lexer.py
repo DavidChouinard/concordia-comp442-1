@@ -25,15 +25,11 @@ def nextToken(stream):
                     while character != "*":
                         character = stream.read(1)
                         if not character:
-                            # TODO: We reached the end of the file without seeing a closed comment
-                            print("Reached end of the file without seeing a closed comment symbol")
-                            break
+                            return CompileError('Multiline comment is missing a matching close symbol ("*/")', stream)
 
                     character = stream.read(1)
                     if not character:
-                        # TODO: We reached the end of the file without seeing a closed comment
-                        print("Reached end of the file without seeing a closed comment symbol")
-                        break
+                        return CompileError('Multiline comment is missing a matching close symbol ("*/")', stream)
                     if character == "/":
                         break
             else:
@@ -117,6 +113,7 @@ def nextToken(stream):
                 stream.seek(stream.tell() - 1)
                 return Token("INTNUM", lexeme)
             else:
+                # we're dealing with a floating point number
                 lexeme += character
                 character = stream.read(1)
 
@@ -128,7 +125,6 @@ def nextToken(stream):
                     stream.seek(stream.tell() - 1)
                     return Token("FLOATNUM", lexeme)
                 else:
-                    # TODO: Throw error about "123." form
                     stream.seek(stream.tell() - 1)
                     return CompileError('Unrecognized number format for "' + lexeme + '"', stream)
         else:
@@ -143,7 +139,7 @@ class Token:
         self.lexeme = lexeme
 
     def __str__(self):
-        return self.token + "=\"" + self.lexeme + "\""
+        return self.token + "='" + self.lexeme + "'"
 
     def __eq__(self, other):
         return (self.token == other.token and self.lexeme == other.lexeme)

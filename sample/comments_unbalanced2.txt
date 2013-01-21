@@ -1,0 +1,3 @@
+foo = 1.23;
+
+/* Multiline comment with only a partial close symbol * 

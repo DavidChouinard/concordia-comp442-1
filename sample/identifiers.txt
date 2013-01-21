@@ -1,0 +1,4 @@
+// these should be valid identifiers:
+a abc abc123 a1 a_ a123_
+// these should be invalid identifiers:
+_ab 123ab

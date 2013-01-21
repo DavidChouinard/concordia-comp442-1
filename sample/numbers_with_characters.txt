@@ -1,0 +1,4 @@
+// Per requirement from the FAQ here: http://users.encs.concordia.ca/~s_rabah/site/courses/comp6421/faq.php
+// These two lines should be tokenized identically
+i=12if
+i=12 if
