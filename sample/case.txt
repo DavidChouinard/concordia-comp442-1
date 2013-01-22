@@ -1,0 +1,3 @@
+// Keywords are tokenized regardless of their case
+if IF
+foo FOO

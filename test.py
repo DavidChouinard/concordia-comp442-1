@@ -121,7 +121,7 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_case(self):
         self.stream = io.open("./sample/case.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-            [Token('IF', 'if'),					Token('IF', 'IF'),			Token('IDENTIFIER', 'foo'),
+            [Token('IF', 'if'),					Token('IF', 'if'),			Token('IDENTIFIER', 'foo'),
             Token('IDENTIFIER', 'FOO')])
 
     def getTokensFromStream(self, stream):

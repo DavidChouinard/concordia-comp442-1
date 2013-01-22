@@ -1,0 +1,2 @@
+andfoo = 1; // Make sure identifiers that with keywords don't get
+            // improperly tokenized

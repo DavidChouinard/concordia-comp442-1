@@ -88,12 +88,12 @@ def nextToken(stream):
                     if not next_character.isalpha():
                         # Boolean operators get their own seperata token
                         if lexeme.upper() == "OR" or lexeme.upper() == "AND":
-                            return Token("BOOLOP", lexeme)
+                            return Token("BOOLOP", lexeme.lower())
                         else:
-                            return Token(lexeme.upper(), lexeme)
+                            return Token(lexeme.upper(), lexeme.lower())
                 character = stream.read(1)
             # If we reach here, we read one character too many (to make sure it
-            # wasn't alpha-numeric). Backtrack one character.
+            # wasn't alphanumeric). Backtrack one character.
             stream.seek(stream.tell() - 1)
             return Token("IDENTIFIER", lexeme)
         elif character.isdigit() or character == ".":
