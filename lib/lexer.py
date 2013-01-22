@@ -79,10 +79,18 @@ def nextToken(stream):
             while character.isalnum() or character == "_":
                 # Reserved keywords
                 lexeme += character
-                if lexeme.upper() in ["IF", "THEN", "ELSE", "WHILE", "DO", "CLASS", "NOT", "INTEGER", "REAL", "READ", "WRITE", "RETURN"]:
-                    return Token(lexeme.upper(), lexeme)
-                elif lexeme.upper() == "OR" or lexeme.upper() == "AND":
-                    return Token("BOOLOP", lexeme)
+                if lexeme.upper() in ["IF", "THEN", "ELSE", "WHILE", "DO", "CLASS", "NOT", "INTEGER", "REAL", "READ", "WRITE", "RETURN", "OR", "AND"]:
+                    # Make sure to check that the next character is not alphabetical, 
+                    # it could be an id of the form "andfoo"
+                    next_character = stream.read(1)
+                    stream.seek(stream.tell() - 1)
+
+                    if not next_character.isalpha():
+                        # Boolean operators get their own seperata token
+                        if lexeme.upper() == "OR" or lexeme.upper() == "AND":
+                            return Token("BOOLOP", lexeme)
+                        else:
+                            return Token(lexeme.upper(), lexeme)
                 character = stream.read(1)
             # If we reach here, we read one character too many (to make sure it
             # wasn't alpha-numeric). Backtrack one character.

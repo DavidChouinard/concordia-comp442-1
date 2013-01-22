@@ -1,3 +1,6 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
 from lib.lexer import *
 import unittest
 import io
@@ -53,8 +56,12 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(self.getTokensFromStream(self.stream),
                 [Token('FLOATNUM', '0.23'),		Token('FLOATNUM', '.23'),	Token('FLOATNUM', '1.23'),
                 Token('INTNUM', '123'),			CompileError('Unrecognized number format for "123."', 1),
-                Token('FLOATNUM', '0.0'),		Token('INTNUM', '123'),		Token('IDENTIFIER', 'a'),
-                Token('FLOATNUM', '0.100000'),	Token('INTNUM', '00001')])
+                Token('FLOATNUM', '0.0'),		Token('INTNUM', '123'),		Token('IDENTIFIER', 'a')])
+
+    def test_trailing_zeros(self):
+        self.stream = io.open("./sample/trailing_zeros.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('FLOATNUM', '0.100000'),	Token('INTNUM', '00001')])
 
     def test_numbers_with_characters(self):
         self.stream = io.open("./sample/numbers_with_characters.txt")
@@ -90,6 +97,12 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(self.getTokensFromStream(self.stream),
                 [Token('IDENTIFIER', 'foo'),	Token('NOT', 'not')])
 
+    def test_keywords_at_start(self):
+        self.stream = io.open("./sample/keywords_at_start.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+                [Token('IDENTIFIER', 'andfoo'),	Token('ASSIGNMENT', '='),	Token('INTNUM', '1'),
+                Token('SEMICOLON', ';')])
+
     def test_identifiers(self):
         self.stream = io.open("./sample/identifiers.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
@@ -97,6 +110,19 @@ class TestSequenceFunctions(unittest.TestCase):
             Token('IDENTIFIER', 'a1'),			Token('IDENTIFIER', 'a_'),	Token('IDENTIFIER', 'a123_'),
             CompileError('Unrecognized character "_"', 4), 	                Token('IDENTIFIER', 'ab'),
             Token('INTNUM', '123'),				Token('IDENTIFIER', 'ab')])
+
+    def test_unicode(self):
+        self.stream = io.open("./sample/unicode.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+            [Token('IDENTIFIER', u'téléphone'),	Token('ASSIGNMENT', '='),	Token('INTNUM', '45'),
+            Token('SEMICOLON', ';'),			Token('IDENTIFIER', u'هاتف'),Token('ASSIGNMENT', '='),
+            Token('INTNUM', '10'),				Token('SEMICOLON', ';')])
+
+    def test_case(self):
+        self.stream = io.open("./sample/case.txt")
+        self.assertEqual(self.getTokensFromStream(self.stream),
+            [Token('IF', 'if'),					Token('IF', 'IF'),			Token('IDENTIFIER', 'foo'),
+            Token('IDENTIFIER', 'FOO')])
 
     def getTokensFromStream(self, stream):
         tokens = []
