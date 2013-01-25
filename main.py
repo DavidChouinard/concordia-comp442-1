@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Terminal colors
-from colorama import init, Fore, Back, Style
-init()
+#from colorama import init, Fore, Back, Style
+#init()
 
 from lib.lexer import *
 import io
@@ -30,23 +30,27 @@ def main():
             errors.append(token)
         elif args.debug:
             output.write(u'[' + str(token) + u'] ')
-            #output.write(u'Token(\'' + token.token + u'\', \'' + token.lexeme + u'\'),')
-            #for _ in range(abs(4 - ((5 + len(token.token + token.lexeme)) % 15))):
-                #output.write(u'	')
 
-        #print(Fore.GREEN + "( " + Fore.RESET + str(token) + Fore.GREEN + " )" + Fore.RESET)
         token = nextToken(stream)
 
     if errors:
-        print(Back.RED + "Found " + str(len(errors)) + " error" + ("s" if len(errors) > 1 else "") + ":" + Style.RESET_ALL + "\n")
-        error_log.write(u'Found ' + str(len(errors)) + u' error' + (u's' if len(errors) > 1 else u'') + u':\n\n')
+        #print(Back.RED + "Found " + str(len(errors)) + " error" + ("s" if len(errors) > 1 else "") + ":" + Style.RESET_ALL + "\n")
+        print("Found " + str(len(errors)) + " error" + ("s" if len(errors) > 1 else "") + ":\n")
+
+        if args.debug:
+            error_log.write(u'Found ' + str(len(errors)) + u' error' + (u's' if len(errors) > 1 else u'') + u':\n\n')
 
         for error in errors:
-            print("    " + error.message + "\n    " + Fore.CYAN + "Line " + str(error.line_number) + ":" + Style.RESET_ALL + "  " + error.context)
-            error_log.write(u'    ' + error.message + u'\n    ' + u'Line ' + str(error.line_number) + u': ' + error.context + u'\n')
+            #print("    " + error.message + "\n    " + Fore.CYAN + "Line " + str(error.line_number) + ":" + Style.RESET_ALL + "  " + error.context)
+            print("    " + error.message + "\n    Line " + str(error.line_number) + ":  " + error.context)
+
+            if args.debug:
+                error_log.write(u'    ' + error.message + u'\n    ' + u'Line ' + str(error.line_number) + u': ' + error.context + u'\n')
     else:
-        print(Back.GREEN + "Success" + Style.RESET_ALL + " Tokenization completed without errors")
-        error_log.write(u'Tokenization completed without errors')
+        #print(Back.GREEN + "Success!" + Style.RESET_ALL + " Tokenization completed without errors")
+        print("Success! Tokenization completed without errors")
+        if args.debug:
+            error_log.write(u'Tokenization completed without errors')
 
     stream.close()
 

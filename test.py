@@ -10,119 +10,119 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_ta_sample(self): 
         self.stream = io.open("./sample/ta_sample.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('CLASS', 'class'),		Token('IDENTIFIER', 'myClass'),Token('OPENCURLY', '{'),
-                Token('INTEGER', 'integer'),	Token('IDENTIFIER', 'i'),	Token('ASSIGNMENT', '='),
-                Token('INTNUM', '2'),			Token('SEMICOLON', ';'),	Token('REAL', 'real'),
-                Token('ASSIGNMENT', '='),		Token('FLOATNUM', '6.99'),	Token('SEMICOLON', ';'),
-                Token('IF', 'if'),				Token('OPENPAR', '('),		Token('IDENTIFIER', 'i'),
-                Token('RELOP', '<='),			Token('INTNUM', '4'),		Token('CLOSEPAR', ')'),
-                Token('OPENCURLY', '{'),		Token('CLOSECURLY', '}'),	Token('CLOSECURLY', '}')])
+                [Token.from_string('CLASS', 'class'),		Token.from_string('IDENTIFIER', 'myClass'),Token.from_string('OPENCURLY', '{'),
+                Token.from_string('INTEGER', 'integer'),	Token.from_string('IDENTIFIER', 'i'),	Token.from_string('ASSIGNMENT', '='),
+                Token.from_string('INTNUM', '2'),			Token.from_string('SEMICOLON', ';'),	Token.from_string('REAL', 'real'),
+                Token.from_string('ASSIGNMENT', '='),		Token.from_string('FLOATNUM', '6.99'),	Token.from_string('SEMICOLON', ';'),
+                Token.from_string('IF', 'if'),				Token.from_string('OPENPAR', '('),		Token.from_string('IDENTIFIER', 'i'),
+                Token.from_string('RELOP', '<='),			Token.from_string('INTNUM', '4'),		Token.from_string('CLOSEPAR', ')'),
+                Token.from_string('OPENCURLY', '{'),		Token.from_string('CLOSECURLY', '}'),	Token.from_string('CLOSECURLY', '}')])
 
     def test_comments(self): 
         self.stream = io.open("./sample/comments.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'hello'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '.23'),
-                Token('MULTOP', '/'),			Token('INTNUM', '2'),		Token('SEMICOLON', ';'),
-                Token('IF', 'if'),				Token('OPENPAR', '('),		Token('IDENTIFIER', 'hello'),
-                Token('RELOP', '=='),		    Token('FLOATNUM', '1.23'),	Token('BOOLOP', 'or'),
-                Token('IDENTIFIER', 'hello'),	Token('RELOP', '>='),		Token('INTNUM', '2'),
-                Token('BOOLOP', 'or'),		    Token('IDENTIFIER', 'hello'),Token('RELOP', '<'),
-                Token('INTNUM', '0'),		    Token('BOOLOP', 'and'),		Token('IDENTIFIER', 'hello'),
-                Token('RELOP', '<>'),	        Token('INTNUM', '1'),		Token('CLOSEPAR', ')'),
-                Token('OPENCURLY', '{'),	    Token('IDENTIFIER', 'print'),Token('OPENPAR', '('),
-                Token('IDENTIFIER', 'test'),	Token('CLOSEPAR', ')'),		Token('SEMICOLON', ';'),
-                Token('CLOSECURLY', '}')])
+                [Token.from_string('IDENTIFIER', 'hello'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('FLOATNUM', '.23'),
+                Token.from_string('MULTOP', '/'),			Token.from_string('INTNUM', '2'),		Token.from_string('SEMICOLON', ';'),
+                Token.from_string('IF', 'if'),				Token.from_string('OPENPAR', '('),		Token.from_string('IDENTIFIER', 'hello'),
+                Token.from_string('RELOP', '=='),		    Token.from_string('FLOATNUM', '1.23'),	Token.from_string('BOOLOP', 'or'),
+                Token.from_string('IDENTIFIER', 'hello'),	Token.from_string('RELOP', '>='),		Token.from_string('INTNUM', '2'),
+                Token.from_string('BOOLOP', 'or'),		    Token.from_string('IDENTIFIER', 'hello'),Token.from_string('RELOP', '<'),
+                Token.from_string('INTNUM', '0'),		    Token.from_string('BOOLOP', 'and'),		Token.from_string('IDENTIFIER', 'hello'),
+                Token.from_string('RELOP', '<>'),	        Token.from_string('INTNUM', '1'),		Token.from_string('CLOSEPAR', ')'),
+                Token.from_string('OPENCURLY', '{'),	    Token.from_string('IDENTIFIER', 'print'),Token.from_string('OPENPAR', '('),
+                Token.from_string('IDENTIFIER', 'test'),	Token.from_string('CLOSEPAR', ')'),		Token.from_string('SEMICOLON', ';'),
+                Token.from_string('CLOSECURLY', '}')])
 
     def test_comments_unbalanced(self): 
         self.stream = io.open("./sample/comments_unbalanced.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
-                Token('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
+                [Token.from_string('IDENTIFIER', 'foo'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('FLOATNUM', '1.23'),
+                Token.from_string('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
 
     def test_nested_comments(self): 
         self.stream = io.open("./sample/nested_comments.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
-                Token('SEMICOLON', ';')])
+                [Token.from_string('IDENTIFIER', 'foo'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('FLOATNUM', '1.23'),
+                Token.from_string('SEMICOLON', ';')])
 
     def test_comments_unbalanced2(self): 
         self.stream = io.open("./sample/comments_unbalanced2.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'foo'),	Token('ASSIGNMENT', '='),	Token('FLOATNUM', '1.23'),
-                Token('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
+                [Token.from_string('IDENTIFIER', 'foo'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('FLOATNUM', '1.23'),
+                Token.from_string('SEMICOLON', ';'), CompileError('Multiline comment is missing a matching close symbol ("*/")', 3)])
 
     def test_numbers(self):
         self.stream = io.open("./sample/numbers.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('FLOATNUM', '0.23'),		Token('FLOATNUM', '.23'),	Token('FLOATNUM', '1.23'),
-                Token('INTNUM', '123'),			CompileError('Unrecognized number format for "123."', 1),
-                Token('FLOATNUM', '0.0'),		Token('INTNUM', '123'),		Token('IDENTIFIER', 'a')])
+                [Token.from_string('FLOATNUM', '0.23'),		Token.from_string('FLOATNUM', '.23'),	Token.from_string('FLOATNUM', '1.23'),
+                Token.from_string('INTNUM', '123'),			CompileError('Unrecognized number format for "123."', 1),
+                Token.from_string('FLOATNUM', '0.0'),		Token.from_string('INTNUM', '123'),		Token.from_string('IDENTIFIER', 'a')])
 
     def test_trailing_zeros(self):
         self.stream = io.open("./sample/trailing_zeros.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('FLOATNUM', '0.100000'),	Token('INTNUM', '00001')])
+                [Token.from_string('FLOATNUM', '0.100000'),	Token.from_string('INTNUM', '00001')])
 
     def test_numbers_with_characters(self):
         self.stream = io.open("./sample/numbers_with_characters.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'i'),		Token('ASSIGNMENT', '='),	Token('INTNUM', '12'),
-                Token('IF', 'if'),				Token('IDENTIFIER', 'i'),	Token('ASSIGNMENT', '='),
-                Token('INTNUM', '12'),			Token('IF', 'if')])
+                [Token.from_string('IDENTIFIER', 'i'),		Token.from_string('ASSIGNMENT', '='),	Token.from_string('INTNUM', '12'),
+                Token.from_string('IF', 'if'),				Token.from_string('IDENTIFIER', 'i'),	Token.from_string('ASSIGNMENT', '='),
+                Token.from_string('INTNUM', '12'),			Token.from_string('IF', 'if')])
 
     def test_punctuation(self):
         self.stream = io.open("./sample/punctuation.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('RELOP', '=='),			Token('ADDOP', '+'),		Token('OPENPAR', '('),
-                Token('IF', 'if'),				Token('RELOP', '<>'),		Token('ADDOP', '-'),
-                Token('CLOSEPAR', ')'),			Token('THEN', 'then'),		Token('RELOP', '<'),
-                Token('MULTOP', '*'),			Token('OPENCURLY', '{'),	Token('ELSE', 'else'),
-                Token('RELOP', '>'),		    Token('MULTOP', '/'),		Token('CLOSECURLY', '}'),
-                Token('WHILE', 'while'),	    Token('RELOP', '<='),		Token('ASSIGNMENT', '='),
-                Token('OPENSQUARE', '['),		Token('DO', 'do'),			Token('RELOP', '>='),
-                Token('BOOLOP', 'and'),			Token('CLOSESQUARE', ']'),	Token('CLASS', 'class'),
-                Token('SEMICOLON', ';'),		Token('NOT', 'not'),		Token('INTEGER', 'integer'),
-                Token('COMMA', ','),			Token('BOOLOP', 'or'),		Token('REAL', 'real'),
-                Token('PERIOD', '.'),			Token('READ', 'read'),		Token('WRITE', 'write'),
-                Token('RETURN', 'return')])
+                [Token.from_string('RELOP', '=='),			Token.from_string('ADDOP', '+'),		Token.from_string('OPENPAR', '('),
+                Token.from_string('IF', 'if'),				Token.from_string('RELOP', '<>'),		Token.from_string('ADDOP', '-'),
+                Token.from_string('CLOSEPAR', ')'),			Token.from_string('THEN', 'then'),		Token.from_string('RELOP', '<'),
+                Token.from_string('MULTOP', '*'),			Token.from_string('OPENCURLY', '{'),	Token.from_string('ELSE', 'else'),
+                Token.from_string('RELOP', '>'),		    Token.from_string('MULTOP', '/'),		Token.from_string('CLOSECURLY', '}'),
+                Token.from_string('WHILE', 'while'),	    Token.from_string('RELOP', '<='),		Token.from_string('ASSIGNMENT', '='),
+                Token.from_string('OPENSQUARE', '['),		Token.from_string('DO', 'do'),			Token.from_string('RELOP', '>='),
+                Token.from_string('BOOLOP', 'and'),			Token.from_string('CLOSESQUARE', ']'),	Token.from_string('CLASS', 'class'),
+                Token.from_string('SEMICOLON', ';'),		Token.from_string('NOT', 'not'),		Token.from_string('INTEGER', 'integer'),
+                Token.from_string('COMMA', ','),			Token.from_string('BOOLOP', 'or'),		Token.from_string('REAL', 'real'),
+                Token.from_string('PERIOD', '.'),			Token.from_string('READ', 'read'),		Token.from_string('WRITE', 'write'),
+                Token.from_string('RETURN', 'return')])
 
     def test_unrecognized_characters(self):
         self.stream = io.open("./sample/unrecognized_characters.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('SEMICOLON', ';'),		Token('RELOP', '>='),		CompileError('Unrecognized character "|"', 1),
-                Token('IDENTIFIER', 'foo'),		CompileError('Unrecognized character "~"', 1), Token('IDENTIFIER', 'bar')])
+                [Token.from_string('SEMICOLON', ';'),		Token.from_string('RELOP', '>='),		CompileError('Unrecognized character "|"', 1),
+                Token.from_string('IDENTIFIER', 'foo'),		CompileError('Unrecognized character "~"', 1), Token.from_string('IDENTIFIER', 'bar')])
 
     def test_whitespace(self):
         self.stream = io.open("./sample/whitespace.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'foo'),	Token('NOT', 'not')])
+                [Token.from_string('IDENTIFIER', 'foo'),	Token.from_string('NOT', 'not')])
 
     def test_keywords_at_start(self):
         self.stream = io.open("./sample/keywords_at_start.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-                [Token('IDENTIFIER', 'andfoo'),	Token('ASSIGNMENT', '='),	Token('INTNUM', '1'),
-                Token('SEMICOLON', ';')])
+                [Token.from_string('IDENTIFIER', 'andfoo'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('INTNUM', '1'),
+                Token.from_string('SEMICOLON', ';')])
 
     def test_identifiers(self):
         self.stream = io.open("./sample/identifiers.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-            [Token('IDENTIFIER', 'a'),			Token('IDENTIFIER', 'abc'),	Token('IDENTIFIER', 'abc123'),
-            Token('IDENTIFIER', 'a1'),			Token('IDENTIFIER', 'a_'),	Token('IDENTIFIER', 'a123_'),
-            CompileError('Unrecognized character "_"', 4), 	                Token('IDENTIFIER', 'ab'),
-            Token('INTNUM', '123'),				Token('IDENTIFIER', 'ab')])
+            [Token.from_string('IDENTIFIER', 'a'),			Token.from_string('IDENTIFIER', 'abc'),	Token.from_string('IDENTIFIER', 'abc123'),
+            Token.from_string('IDENTIFIER', 'a1'),			Token.from_string('IDENTIFIER', 'a_'),	Token.from_string('IDENTIFIER', 'a123_'),
+            CompileError('Unrecognized character "_"', 4), 	                Token.from_string('IDENTIFIER', 'ab'),
+            Token.from_string('INTNUM', '123'),				Token.from_string('IDENTIFIER', 'ab')])
 
     def test_unicode(self):
         self.stream = io.open("./sample/unicode.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-            [Token('IDENTIFIER', u'téléphone'),	Token('ASSIGNMENT', '='),	Token('INTNUM', '45'),
-            Token('SEMICOLON', ';'),			Token('IDENTIFIER', u'هاتف'),Token('ASSIGNMENT', '='),
-            Token('INTNUM', '10'),				Token('SEMICOLON', ';')])
+            [Token.from_string('IDENTIFIER', u'téléphone'),	Token.from_string('ASSIGNMENT', '='),	Token.from_string('INTNUM', '45'),
+            Token.from_string('SEMICOLON', ';'),			Token.from_string('IDENTIFIER', u'هاتف'),Token.from_string('ASSIGNMENT', '='),
+            Token.from_string('INTNUM', '10'),				Token.from_string('SEMICOLON', ';')])
 
     def test_case(self):
         self.stream = io.open("./sample/case.txt")
         self.assertEqual(self.getTokensFromStream(self.stream),
-            [Token('IF', 'if'),					Token('IF', 'if'),			Token('IDENTIFIER', 'foo'),
-            Token('IDENTIFIER', 'FOO')])
+            [Token.from_string('IF', 'if'),					Token.from_string('IF', 'if'),			Token.from_string('IDENTIFIER', 'foo'),
+            Token.from_string('IDENTIFIER', 'FOO')])
 
     def getTokensFromStream(self, stream):
         tokens = []

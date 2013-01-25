@@ -35,44 +35,44 @@ def nextToken(stream):
             else:
                 # We saw a "/" but it isn't a comment, backtrack
                 stream.seek(stream.tell() - 1)
-                return Token("MULTOP", "/")
+                return Token("MULTOP", "/", stream.tell())
         elif character == ";":
-            return Token("SEMICOLON", character)
+            return Token("SEMICOLON", character, stream.tell())
         elif character == ",":
-            return Token("COMMA", character)
+            return Token("COMMA", character, stream.tell())
         elif character == "+" or character == "-":
-            return Token("ADDOP", character)
+            return Token("ADDOP", character, stream.tell())
         elif character == "*":
             # Already dealt with division (see above)
-            return Token("MULTOP", character)
+            return Token("MULTOP", character, stream.tell())
         elif character == "(":
-            return Token("OPENPAR", character)
+            return Token("OPENPAR", character, stream.tell())
         elif character == ")":
-            return Token("CLOSEPAR", character)
+            return Token("CLOSEPAR", character, stream.tell())
         elif character == "[":
-            return Token("OPENSQUARE", character)
+            return Token("OPENSQUARE", character, stream.tell())
         elif character == "]":
-            return Token("CLOSESQUARE", character)
+            return Token("CLOSESQUARE", character, stream.tell())
         elif character == "{":
-            return Token("OPENCURLY", character)
+            return Token("OPENCURLY", character, stream.tell())
         elif character == "}":
-            return Token("CLOSECURLY", character)
+            return Token("CLOSECURLY", character, stream.tell())
         elif character == "=":
             # Read the following character
             if stream.read(1) == "=":
-                return Token("RELOP", "==")
+                return Token("RELOP", "==", stream.tell())
             else:
                 # Oops, the next character is something else. It means we're dealing with
                 # an assignment statement. Back off on character and return the token
                 stream.seek(stream.tell() - 1)
-                return Token("ASSIGNMENT", character)
+                return Token("ASSIGNMENT", character, stream.tell())
         elif character == "<" or character == ">":
             next_character = stream.read(1)
             if next_character == "=" or (character == "<" and next_character == ">"):
-                return Token("RELOP", character + next_character)
+                return Token("RELOP", character + next_character, stream.tell())
             else:
                 stream.seek(stream.tell() - 1)
-                return Token("RELOP", character)
+                return Token("RELOP", character, stream.tell())
         elif character.isalpha():
             # Find if we have an ID or an reserved keyword
             lexeme = ""
@@ -88,14 +88,14 @@ def nextToken(stream):
                     if not next_character.isalpha():
                         # Boolean operators get their own seperata token
                         if lexeme.upper() == "OR" or lexeme.upper() == "AND":
-                            return Token("BOOLOP", lexeme.lower())
+                            return Token("BOOLOP", lexeme.lower(), stream.tell())
                         else:
-                            return Token(lexeme.upper(), lexeme.lower())
+                            return Token(lexeme.upper(), lexeme.lower(), stream.tell())
                 character = stream.read(1)
             # If we reach here, we read one character too many (to make sure it
             # wasn't alphanumeric). Backtrack one character.
             stream.seek(stream.tell() - 1)
-            return Token("IDENTIFIER", lexeme)
+            return Token("IDENTIFIER", lexeme, stream.tell())
         elif character.isdigit() or character == ".":
 
             if character == ".":
@@ -103,15 +103,13 @@ def nextToken(stream):
                 stream.seek(stream.tell() - 1)
                 if not next_character.isdigit():
                     # We're dealing with a single period not a digit
-                    return Token("PERIOD", character)
+                    return Token("PERIOD", character, stream.tell())
 
             #if character == "0":
                 #next_character = stream.read(1)
                 #stream.seek(stream.tell() - 1)
 
             lexeme = ""
-            # TODO: deal with zero at beginning
-            # if char == 0, only one level
             while character.isdigit():
                 lexeme += character
                 character = stream.read(1)
@@ -119,7 +117,7 @@ def nextToken(stream):
             if character != ".":
                 # we're dealing with an integer
                 stream.seek(stream.tell() - 1)
-                return Token("INTNUM", lexeme)
+                return Token("INTNUM", lexeme, stream.tell())
             else:
                 # we're dealing with a floating point number
                 lexeme += character
@@ -131,7 +129,7 @@ def nextToken(stream):
                         lexeme += character
                         character = stream.read(1)
                     stream.seek(stream.tell() - 1)
-                    return Token("FLOATNUM", lexeme)
+                    return Token("FLOATNUM", lexeme, stream.tell())
                 else:
                     stream.seek(stream.tell() - 1)
                     return CompileError('Unrecognized number format for "' + lexeme + '"', stream)
@@ -142,9 +140,19 @@ def nextToken(stream):
 class Token:
     # Tokens are internally stored as strings
 
-    def __init__(self, token, lexeme):
+    #def __init__(self, token, lexeme):
+        #self.token = token.upper()
+        #self.lexeme = lexeme
+
+
+    def __init__(self, token, lexeme, stream_position):
         self.token = token.upper()
         self.lexeme = lexeme
+        self.position = stream_position
+
+    @classmethod
+    def from_string(cls, token, lexeme):
+        return cls(token, lexeme, None)
 
     def __str__(self):
         return self.token + "='" + self.lexeme + "'"
